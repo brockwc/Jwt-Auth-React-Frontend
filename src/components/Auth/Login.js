@@ -16,7 +16,26 @@ class Login extends Component {
   };
 
   handleSubmit = (event) => {
-    // handle submit here
+    event.preventDefault();
+
+    const user = this.state;
+
+    fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(user)
+    }).then(res => res.json())
+      .then(data => {
+        console.log("Success", data);
+        this.props.setCurrentUser(data.signedJwt);
+        // TODO: un comment when profile functionality is done
+        this.props.history.push('/profile')
+      })
+      .catch(err => {
+        this.setState({ error: err.response.data.message });
+      })
   };
 
   render() {
